@@ -43,9 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     boolean isConnection = true;
 
-    DownloadTask jsonTask = null;
-    DownloadIconWeather iconTask = null;
-
     String id = "981d90339ec2fb4304d8ef6a9959fdc0";
     String icon ="";
 
@@ -163,7 +160,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void searchWeather()
     {
-
+        if(cityName.getText().toString().isEmpty())
+        {
+            Toast.makeText(this,"Please, enter a city",Toast.LENGTH_LONG).show();
+            return;
+        }
         //cityName.clearFocus();
         //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         InputMethodManager mnr = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -171,8 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         try {
             String encodedCityName = URLEncoder.encode(cityName.getText().toString(),"UTF-8");
-            if(jsonTask == null)
-                jsonTask = new DownloadTask();
+            DownloadTask jsonTask = new DownloadTask();
             jsonTask.execute("http://api.openweathermap.org/data/2.5/weather?q="+ encodedCityName+"&units=metric&APPID="+id);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -185,8 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void downloadIconWeather() {
-        if(iconTask == null)
-            iconTask = new DownloadIconWeather(); //http://openweathermap.org/img/w/10d.png
+        DownloadIconWeather iconTask = new DownloadIconWeather(); //http://openweathermap.org/img/w/10d.png
         iconTask.execute("http://openweathermap.org/img/w/"+ icon+".png");
     }
 
